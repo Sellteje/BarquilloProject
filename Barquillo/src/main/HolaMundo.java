@@ -1,7 +1,7 @@
 package main;
 
 
-import utils.jdbc.BBDDConection;
+import model.jdbc.BBDDConection;
 
 public class HolaMundo {
 	
