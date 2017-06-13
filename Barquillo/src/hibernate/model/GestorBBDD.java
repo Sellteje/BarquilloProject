@@ -10,7 +10,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 import utils.Constants;
-import utils.jdbc.UsuariosTable;
+import model.jdbc.UsuariosTable;
 
 public class GestorBBDD {
 	
