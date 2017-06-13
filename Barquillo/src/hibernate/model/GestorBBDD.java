@@ -24,7 +24,7 @@ public class GestorBBDD {
 	
 	
 	public String addUser(String nombre, String password){
-		 int userID = -1;
+		 String userID = "";
 		 String result = null;
 		 try{		    
 		     
@@ -35,7 +35,7 @@ public class GestorBBDD {
 		    	 
 		      tx = session.beginTransaction();
 		      Usuario user = new Usuario(nombre,password);
-		      userID = (int) session.save(user); 
+		      userID = (String) session.save(user); 
 		      tx.commit();		
 		      result = String.valueOf(userID);
 		      
