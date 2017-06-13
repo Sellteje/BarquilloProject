@@ -1,4 +1,4 @@
-package utils.jdbc;
+package model.jdbc;
 
 public class UsuariosTable {
 	
