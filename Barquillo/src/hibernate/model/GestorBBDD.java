@@ -1,15 +1,21 @@
 package hibernate.model;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
+import javax.persistence.metamodel.EntityType;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.metamodel.internal.SingularAttributeImpl;
 import org.hibernate.query.Query;
 
 import utils.Constants;
+import utils.Utils;
 import model.jdbc.UsuariosTable;
 
 public class GestorBBDD {
@@ -47,7 +53,7 @@ public class GestorBBDD {
 		     }
 		     
 		    }catch (Throwable ex) { 
-		     System.err.println("Couldn't create session factory." + ex);
+		     System.err.println(Constants.ERROR_CREAR_SESION+ ex);
 		     throw new ExceptionInInitializerError(ex); 
 		    }
 		 return result;
@@ -77,7 +83,7 @@ public class GestorBBDD {
 		     }
 		     
 		    }catch (Throwable ex) { 
-		     System.err.println("Couldn't create session factory." + ex);
+		     System.err.println(Constants.ERROR_CREAR_SESION + ex);
 		     throw new ExceptionInInitializerError(ex); 
 		    }
 		 return result;
@@ -118,7 +124,7 @@ public class GestorBBDD {
 		     }
 		     
 		    }catch (Throwable ex) { 
-		     System.err.println("Couldn't create session factory." + ex);
+		     System.err.println(Constants.ERROR_CREAR_SESION+ ex);
 		     throw new ExceptionInInitializerError(ex); 
 		    }
 		 return result;
@@ -151,11 +157,62 @@ public class GestorBBDD {
 		     }
 		     
 		    }catch (Throwable ex) { 
-		     System.err.println("Couldn't create session factory." + ex);
+		     System.err.println(Constants.ERROR_CREAR_SESION + ex);
 		     throw new ExceptionInInitializerError(ex); 
 		    }
 		 return result;
 	}
+
+
+
+	@SuppressWarnings("rawtypes")
+	public String showTables() {
+		 String result = "";
+		 try{
+				     
+		     Session session = mFactory.openSession();
+		     Transaction tx = null;		    
+		     
+		     try{
+		    	 
+		      tx = session.beginTransaction();
+		      Iterator<EntityType<?>> it = session.getMetamodel().getEntities().iterator();
+		      while(it.hasNext()){
+		    	EntityType<?> t = it.next();
+		    	result += Constants.SALTO_LINEA + Constants.TABLA+ t.getName() + Constants.SALTO_LINEA;		    	
+
+		    	Iterator<?> g = t.getAttributes().iterator();
+		    
+		    	
+		    	while(g.hasNext()){
+		    		SingularAttributeImpl h = ((SingularAttributeImpl) g.next());
+		    		String nombre = h.getName()+" ";
+		    		String[] tipo = h.getJavaType().getName().split("\\.");	   
+		    		h.isOptional();
+	
+		    		result += Constants.ESPACIADOR +Constants.COLUMNA  +
+		    				  nombre+ Constants.ESPACIADOR+
+		    				  Constants.TIPO + tipo[tipo.length-1]+Constants.ESPACIADOR+
+		    				  Constants.NULLABLE + Utils.booleanToString(h.isOptional())+Constants.ESPACIADOR+
+		    				  Constants.CLAVE + Utils.booleanToString(h.isId())+ Constants.SALTO_LINEA;		    		
+		    	}		    	
+		      }		      
+		      
+		     }catch (HibernateException e) {
+		    	 if (tx!=null) tx.rollback();
+		    	 e.printStackTrace(); 
+		     }finally {
+		    	 session.close(); 
+		     }
+		     
+		    }catch (Throwable ex) { 
+		    	System.err.println(Constants.ERROR_CREAR_SESION + ex);
+		    	throw new ExceptionInInitializerError(ex); 
+		    }
+		 return result;
+	}
+	
+	
 	
 	
 }
