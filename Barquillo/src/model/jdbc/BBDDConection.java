@@ -2,8 +2,8 @@ package model.jdbc;
 
 import java.sql.*;
 
-import utils.Constants;
-import utils.excepciones.*;
+import com.barquillo.utils.Constants;
+import com.barquillo.utils.excepciones.*;
 
 public class BBDDConection {
 
