@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 import com.barquillo.hibernate.model.Usuario;
 import com.barquillo.usuarios.dao.GestorBBDD;
 
@@ -15,7 +17,10 @@ import com.barquillo.usuarios.dao.GestorBBDD;
  * Servlet implementation class p
  */
 public class LoginServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
+	
+	static Logger logger = Logger.getLogger(LoginServlet.class);
 
 
 	/**
@@ -28,20 +33,25 @@ public class LoginServlet extends HttpServlet {
 
 			user.setId_Usuario(request.getParameter("nombre"));
 			user.setPassword(request.getParameter("pass"));
-
+			logger.debug("Logando usuario "+user.getId_Usuario());
+//			
 //			String tablas = gestorBBDD.showTables();
 //			System.out.println(tablas);
 //			System.out.println(gestorBBDD.getUsers());
+			
 			user = gestorBBDD.login(user);			
 			if (user != null) { 
 				HttpSession session = request.getSession(true); 
 				session.setAttribute("currentSessionUser",user);  
 				response.sendRedirect("login/userLogged.jsp");
-			} else 
-				response.sendRedirect("login/invalidLogin.jsp"); //error page 
+				logger.debug("Login correcto....");
+			} else {
+				response.sendRedirect("login/invalidLogin.jsp"); //error page
+				logger.debug("Login Incorrecto, usuario rechazado");
+			} 
 
 		} catch (Throwable theException) { 
-			System.out.println(theException); 
+			logger.debug(theException);
 		}
 	}
 
